@@ -2,11 +2,20 @@ SELECT * FROM employees;
 
 SELECT * FROM salaries;
 
+SELECT * FROM dept_emp;
+
+SELECT * FROM departments;
+
+SELECT * FROM titles;
+
+SELECT * FROM dept_manager;
+
+
 --List the following details of each employee: employee number, last name, first name, sex, and salary.
 
 SELECT e.emp_no, e.last_name, e.first_name, e.sex, s.salary
 FROM employees AS e
-JOIN salaries AS s
+LEFT JOIN salaries AS s
 ON e.emp_no = s.emp_no
 WHERE e.emp_no = s.emp_no;
 
@@ -28,11 +37,13 @@ WHERE emp_title_id = 'm0001';
 
 SELECT * FROM dept_manager;
 
--- List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
+-- List the manager of each department with the following information: department number, 
+--department name, the manager's employee number,last name, first name.
 -- using join 
-SELECT d.dept_no, d.dept_name, dm.emp_no AS "Manager's_emp_no", e.last_name AS "Manager's_last_name", e.first_name AS "Manager's_first_name"
+
+SELECT d.dept_no, d.dept_name, dm.emp_no AS "Managers_emp_no", e.last_name AS "Managers_last_name", e.first_name AS "Managers_first_name"
 FROM departments AS d
-INNER JOIN dept_manager AS dm
+LEFT JOIN dept_manager AS dm
 	ON dm.dept_no = d.dept_no
 INNER JOIN employees AS e
 	ON dm.emp_no = e.emp_no
@@ -55,9 +66,6 @@ INNER JOIN dept_emp AS demp
 INNER JOIN departments AS d
 	ON demp.dept_no = d.dept_no
 WHERE e.emp_no = demp.emp_no;
-
-
-
 
 
 
