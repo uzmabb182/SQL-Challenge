@@ -1,4 +1,4 @@
-SELECT * FROM employees;
+SELECT COUNT(*) FROM employees;
 
 SELECT * FROM salaries;
 
@@ -41,20 +41,58 @@ SELECT * FROM dept_manager;
 --department name, the manager's employee number,last name, first name.
 -- using join 
 
-SELECT d.dept_no, d.dept_name, dm.emp_no AS "Managers_emp_no", e.last_name AS "Managers_last_name", e.first_name AS "Managers_first_name"
+SELECT d.dept_no, d.dept_name, dm.emp_no AS "Managers_emp_no", e.last_name AS "Managers_last_name", e.first_name AS "Managers_first_name", e.emp_title_id
 FROM departments AS d
-LEFT JOIN dept_manager AS dm
+INNER JOIN dept_manager AS dm
 	ON dm.dept_no = d.dept_no
 INNER JOIN employees AS e
 	ON dm.emp_no = e.emp_no
 INNER JOIN titles AS t
 	ON e.emp_title_id = t.title_id
-WHERE e.emp_title_id = t.title_id;
+WHERE t.title = 'Manager';
 
---List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
+--List the manager of each department with the following information: department number, 
+--department name, the manager's employee number, last name, first name.
 --using subquery
 
+SELECT d.dept_no, d.dept_name, dm.emp_no
+FROM departments AS d
+INNER JOIN dept_manager AS dm
+	ON d.dept_no = dm.dept_no
+	WHERE dm.emp_no In (SELECT e.emp_no
+						FROM employees As e
+						JOIN titles AS t
+							ON e.emp_title_id = t.title_id
+						WHERE t.title = 'Manager');
 
+
+-- Create View
+DROP VIEW managers_dept_no;
+CREATE VIEW managers_dept_no AS
+SELECT d.dept_no, d.dept_name, dm.emp_no
+FROM departments AS d
+JOIN dept_manager AS dm
+	ON d.dept_no = dm.dept_no
+WHERE dm.emp_no In (SELECT e.emp_no
+						FROM employees As e
+						JOIN titles AS t
+							ON e.emp_title_id = t.title_id
+					WHERE t.title = 'Manager');
+
+
+--Query all from view
+SELECT * FROM managers_dept_no;
+
+--List the manager of each department with the following information: department number, 
+--department name, the manager's employee number, last name, first name.
+-- Now joining 'employees' table and 'managers_dept_no' view table to list the manager of each department.
+
+SELECT e.emp_no, e.first_name, e.last_name, e.emp_title_id, md.dept_no, md.dept_name
+FROM employees AS e
+INNER JOIN managers_dept_no AS md
+	ON md.emp_no = e.emp_no
+WHERE md.emp_no = e.emp_no;
+	
 
 
 --List the department of each employee with the following information: employee number, last name, first name, and department name.
