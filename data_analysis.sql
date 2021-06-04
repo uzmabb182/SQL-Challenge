@@ -89,29 +89,154 @@ SELECT * FROM managers_dept_no;
 
 SELECT e.emp_no, e.first_name, e.last_name, e.emp_title_id, md.dept_no, md.dept_name
 FROM employees AS e
-INNER JOIN managers_dept_no AS md
+LEFT JOIN managers_dept_no AS md
 	ON md.emp_no = e.emp_no
 WHERE md.emp_no = e.emp_no;
 	
 
 
 --List the department of each employee with the following information: employee number, last name, first name, and department name.
---using join
+--using join on three tables
+
+SELECT * FROM departments;
+SELECT * FROM dept_emp;
+SELECT count(*) FROM dept_emp;
+
 SELECT e.emp_no, e.last_name, e.first_name, d.dept_name
 FROM employees AS e
-INNER JOIN dept_emp AS demp
-	ON demp.emp_no = e.emp_no
-INNER JOIN departments AS d
-	ON demp.dept_no = d.dept_no
-WHERE e.emp_no = demp.emp_no;
+LEFT JOIN dept_emp AS dp
+	ON e.emp_no = dp.emp_no
+LEFT JOIN departments AS d
+	ON d.dept_no = dp.dept_no
+WHERE e.emp_no = dp.emp_no;
+
+--List the department of each employee with the following information: employee number, last name, first name, and department name.
+--using view
+
+--writing query to create for view
+SELECT e.emp_no, e.last_name, e.first_name, de.dept_no
+FROM employees AS e
+INNER JOIN dept_emp AS de
+	ON e.emp_no = de.emp_no
+WHERE e.emp_no IN (
+		SELECT de.emp_no 
+		FROM dept_emp AS de);
+		
+-- creating view
+DROP VIEW employees_dept;
+CREATE VIEW employees_dept AS
+SELECT e.emp_no, e.last_name, e.first_name, de.dept_no
+FROM employees AS e
+INNER JOIN dept_emp AS de
+	ON e.emp_no = de.emp_no
+WHERE e.emp_no IN (
+		SELECT de.emp_no 
+		FROM dept_emp AS de);
+		
+--querying view
+SELECT * FROM employees_dept;
+
+--Now joining 'departments' table and view
+
+SELECT ed.emp_no, ed.last_name, ed.first_name, d.dept_name
+FROM employees_dept AS ed
+LEFT JOIN departments AS d
+	ON d.dept_no = ed.dept_no
+WHERE d.dept_no = ed.dept_no;
 
 
 
 
 --List first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B."
 
+SELECT first_name, last_name, sex
+FROM employees
+WHERE first_name = 'Hercules'
+AND last_name like 'B%';
+
 --List all employees in the Sales department, including their employee number, last name, first name, and department name.
+
+SELECT COUNT(*) FROM employees;
+SELECT * FROM departments;
+SELECT * FROM dept_emp;
+SELECT COUNT(*) FROM dept_emp;
+
+-- querying the dept_no of 'Sales' dept.
+
+SELECT dept_no
+FROM departments
+WHERE dept_name = 'Sales';
+
+
+
+SELECT e.emp_no, e.last_name, e.first_name, d.dept_name, d.dept_no
+FROM employees AS e
+LEFT JOIN dept_emp AS de
+	ON e.emp_no = de.emp_no
+LEFT JOIN departments AS d
+	ON d.dept_no = de.dept_no
+WHERE de.dept_no IN (
+		SELECT de.dept_no
+		FROM dept_emp AS de
+		JOIN departments AS d
+			ON d.dept_no = de.dept_no
+		WHERE d.dept_name = 'Sales')
+ORDER BY e.last_name;
+
+--querying by creating view
+DROP VIEW sales_emp;
+CREATE VIEW sales_emp AS
+SELECT de.emp_no, de.dept_no, d.dept_name
+FROM dept_emp AS de
+RIGHT JOIN departments AS d
+	ON d.dept_no = de.dept_no
+WHERE d.dept_name = 'Sales';
+
+--querying view
+
+SELECT * FROM sales_emp;
+
+-- now joining employees table and sales_emp view
+
+SELECT e.emp_no, e.last_name, e.first_name, se.dept_name, se.dept_no
+FROM employees AS e
+LEFT JOIN sales_emp AS se
+	ON se.emp_no = e.emp_no
+WHERE se.emp_no = e.emp_no
+ORDER BY e.last_name;
+
+
 
 --List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
+SELECT * FROM departments;
+
+-- querying the dept_no of 'Development' dept.
+
+SELECT dept_no
+FROM departments
+WHERE dept_name = 'Development';
+
+
+SELECT e.emp_no, e.last_name, e.first_name, d.dept_name, d.dept_no
+FROM employees AS e
+LEFT JOIN dept_emp AS de
+	ON e.emp_no = de.emp_no
+LEFT JOIN departments AS d
+	ON d.dept_no = de.dept_no
+WHERE de.dept_no IN (
+		SELECT de.dept_no
+		FROM dept_emp AS de
+		JOIN departments AS d
+			ON d.dept_no = de.dept_no
+		WHERE d.dept_name = 'Sales'
+		OR d.dept_name = 'Development')
+ORDER BY e.last_name;
+
+
 --In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
+
+SELECT last_name, count(last_name) AS freq_count_last_name
+FROM employees
+GROUP BY last_name
+ORDER BY last_name DESC;
