@@ -240,3 +240,18 @@ SELECT last_name, count(last_name) AS freq_count_last_name
 FROM employees
 GROUP BY last_name
 ORDER BY last_name DESC;
+
+--BONUS: Average salary by title
+DROP VIEW average_salaries;
+CREATE VIEW average_salaries AS
+SELECT ROUND(AVG(s.salary)) As avg_salaries, t.title
+FROM salaries AS s
+LEFT JOIN employees AS e
+	ON e.emp_no = s.emp_no
+LEFT JOIN titles AS t
+	ON  e.emp_title_id = t.title_id 
+GROUP BY t.title;
+
+--querying data from view
+
+SELECT * FROM average_salaries;
