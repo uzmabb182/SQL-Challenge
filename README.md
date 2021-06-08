@@ -14,31 +14,31 @@ Here the data is inspected and the 'Entity Relational Diagram' ERD is sketched.
 
 1. Querying the details of each employee: employee number, last name, first name, sex, and salary and the below is the screen shot of the result.
 
-![alt text](query1_result.PNG)
+![alt text](query_results\query1_result.PNG)
 
 2. Querying first name, last name, and hire date for employees who were hired in 1986.
 
-![alt text](query2_result.PNG)
+![alt text](query_results\query2_result.PNG)
 
 3. Querying the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name. 
 
-![alt text](query3_result.PNG)
+![alt text](query_results\query3_result.PNG)
 
 4. Querying the department of each employee with the following information: employee number, last name, first name, and department name. 
 
-![alt text](query4_result.PNG)
+![alt text](query_results\query4_result.PNG)
 
 5. Querying first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B." 
 
-![alt text](query5_result.PNG)
+![alt text](query_results\query6_result.PNG)
 
 6. Querying all employees in the Sales department, including their employee number, last name, first name, and department name.
 
-![alt text](query6_result.PNG)
+![alt text](query_results\query7_result.PNG)
 
 7. Querying all employees in the Sales and Development departments, including their employee number, last name, first name, and department name. 
 
-![alt text](query7_result.PNG)
+![alt text](query_results\query8_result.PNG)
 
 8. Querying the frequency count of employee last names, i.e., how many employees share each last name in descending order.
 
