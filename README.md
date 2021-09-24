@@ -1,6 +1,6 @@
 # SQL-Challenge
 
-![alt text](sql.png)
+![alt text](query_results/sql.PNG)
 
 # Data Engineering:
 
